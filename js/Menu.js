@@ -1,4 +1,4 @@
-class Menu{
+export default class Menu{
     constructor(json){
         this.year = json.year;
         this.week = json.week;
@@ -13,9 +13,7 @@ class Menu{
 
     static isToday(day){
         const today = new Date().getDay();
-        if(this.getDayInteger(day) === today)
-            return true;
-        return false;
+        return this.getDayInteger(day) === today;
     }
 
     static getDayInteger(day){
@@ -26,7 +24,7 @@ class Menu{
                 return 2;
             case 'Onsdag':
                 return 3;
-            case 'Torsadg':
+            case 'Torsdag':
                 return 4;
             case 'Fredag':
                 return 5;

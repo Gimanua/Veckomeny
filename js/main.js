@@ -1,43 +1,50 @@
+import Menu from './Menu.js';
+
 Menu.getThisWeeksMenu().then(menu => {
-    document.getElementById('date').innerHTML = `Vecka ${menu.week}, ${menu.year}`
+    document.getElementById('date').innerHTML = `Vecka ${menu.week}, ${menu.year}`;
+
     menu.meals.forEach(meal => {
-        const liTag = document.createElement('li');
-        liTag.style.listStyleType = 'none';
-        if(Menu.isToday(meal.day)){
-            liTag.style.backgroundColor = '#cfe3d4';
-        }
-
-        const ulTag = document.createElement('ul');
+        const day = document.createElement('li');
+        day.style.listStyleType = 'none';
         
-        const dishLiTag = document.createElement('li');
-        const dishPTag = document.createElement('p');
+        if (Menu.isToday(meal.day))
+            day.style.backgroundColor = '#cfe3d4';
 
-        const altDishLiTag = document.createElement('li');
-        const altDishPTag = document.createElement('p');
+        const dayHeader = getElementWithContent('h3', meal.day);
+        const dishes = getDishes(meal);
 
-        const strongTag1 = document.createElement('strong');
-        strongTag1.innerHTML = 'Alternativ 1: ';
+        day.appendChild(dayHeader);
+        day.appendChild(dishes);
 
-        dishPTag.appendChild(strongTag1);
-        dishPTag.innerHTML += meal.dish;
-        dishLiTag.appendChild(dishPTag);
-
-        const strongTag2 = document.createElement('strong');
-        strongTag2.innerHTML = 'Alternativ 2: ';
-
-        altDishPTag.appendChild(strongTag2);
-        altDishPTag.innerHTML += meal.alt_dish;
-        altDishLiTag.appendChild(altDishPTag);
-
-        ulTag.appendChild(dishLiTag);
-        ulTag.appendChild(altDishLiTag);
-
-        const dayh2Tag = document.createElement('h3');
-        dayh2Tag.innerHTML = meal.day;
-
-        liTag.appendChild(dayh2Tag);
-        liTag.appendChild(ulTag);
-
-        document.getElementById('menu').appendChild(liTag);
+        document.getElementById('menu').appendChild(day);
     });
 });
+
+function getElementWithContent(elementName, content) {
+    const element = document.createElement(elementName);
+    element.innerHTML = content;
+    return element;
+}
+
+function getDishes(meal) {
+    const dishes = document.createElement('ul');
+
+    const dish = getDish(false, meal);
+    const altDish = getDish(true, meal);
+
+    dishes.appendChild(dish);
+    dishes.appendChild(altDish);
+
+    return dishes;
+}
+
+function getDish(altDish, meal){
+    const dish = document.createElement('li');
+    const dishName = document.createElement('p');
+
+    dishName.appendChild(getElementWithContent('strong', altDish ? 'Alternativ 2: ' : 'Alternativ 1: '));
+    dishName.innerHTML += altDish ? meal.alt_dish : meal.dish;
+    dish.appendChild(dishName);
+
+    return dish;
+}
